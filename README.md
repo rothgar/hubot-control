@@ -44,26 +44,18 @@ Heroku demo: http://hubot-control-demo.herokuapp.com/ (usually broken due to per
 Prerequisites:
 
 * [Docker](https://docker.com)
+* [Crane](https://github.com/michaelsauter/crane)
 
-Start a Postgres instance
+See crane.yml for variables, ports, and containers that run.
 
-    docker run --name hubot-control-db -d -e USER="docker" -e DB="hubot_control" -e PASS="docker" paintedfox/postgresql
-
-Create a data-only container to store Hubots
-
-    docker run --name hubot-control-data -v /usr/src/hubot-control/hubots busybox
-
-Run database migrations
-
-    docker run --rm --link hubot-control-db:db -e RAILS_DB_USERNAME="docker" -e RAILS_DB_PASSWORD="docker" hackedu/hubot-control bundle exec rake db:migrate RAILS_ENV=production
-
-Start Hubot Control
-
-    docker run --name hubot-control -d --link hubot-control-db:db --volumes-from hubot-control-data -e RAILS_DB_USERNAME="docker" -e RAILS_DB_PASSWORD="docker" -p 3000:3000 hackedu/hubot-control
+    crane init
 
 Hubot Control will now be running on port 3000 of your system. Whenever you
-create a hubot , you'll want to restart Hubot Control and publish their HTTP
+create a hubot, you'll want to restart Hubot Control and publish their HTTP
 ports (`-p` flag).
+
+    crane stop hubot-control-web
+    crane start hubot-control-web
 
 There's a few things to notice:
 
@@ -71,7 +63,7 @@ There's a few things to notice:
   Hubot Control is stopped or removed, the database will be persisted in the
   Postgres container. You may want to map the Postgres data to a volume on your
   host. The Postgres image's documentation has more details on this
-  (https://registry.hub.docker.com/u/paintedfox/postgresql/).
+  (https://registry.hub.docker.com/_/postgres/).
 * The files for created hubots are stored in the `hubot-control-data`
   container. Do not delete this container unless you want to delete all of your
   hubots. 
