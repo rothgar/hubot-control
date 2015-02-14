@@ -51,8 +51,7 @@ See crane.yml for variables, ports, and containers that run.
     crane init
 
 Hubot Control will now be running on port 3000 of your system. Whenever you
-create a hubot, you'll want to restart Hubot Control and publish their HTTP
-ports (`-p` flag).
+create a hubot, you'll want to restart Hubot Control.
 
     crane stop hubot-control-web
     crane start hubot-control-web
