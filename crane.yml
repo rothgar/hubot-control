@@ -2,19 +2,19 @@
 containers:
   hubot-control-data:
     image: busybox
-    volume: ["/usr/src/app"]
-    detach: true
-    cmd: ["true"]
+    run:
+      volume: ["/usr/src/app/hubots"]
+      detach: true
+      cmd: ["true"]
 
   hubot-control-db:
     image: postgres:9.3
     run:
-      env: ["POSTGRES_USER=hubot_control","POSTGRES_PASSWORD=hubot"]
+      env: ["POSTGRES_USER=hubot","POSTGRES_PASSWORD=hubot","POSTGRES_DB=hubot_control"]
       detach: true
-      volumes-from: ["hubot-control-data"]
-      volume: ["./init.sh:/docker-entrypoint-initdb.d/init.sh"]
 
   hubot-db-migration:
+    dockerfile: ./
     image: hubot-control
     run:
       interactive: true
@@ -24,11 +24,10 @@ containers:
       cmd: bundle exec rake db:migrate RAILS_ENV=production
 
   hubot-control-web:
-    dockerfile: Dockerfile
     image: hubot-control
     run:
-      detach: false
-      env: ["RAILS_DB_USERNAME=hubot_control","RAILS_DB_PASSWORD=hubot"]
+      detach: true
+      env: ["RAILS_DB_USERNAME=hubot","RAILS_DB_PASSWORD=hubot"]
       link: ["hubot-control-db:db"]
       volumes-from: ["hubot-control-data"]
       publish: ["3000:3000"]
