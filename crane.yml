@@ -10,7 +10,10 @@ containers:
   hubot-control-db:
     image: postgres:9.3
     run:
-      env: ["POSTGRES_USER=hubot","POSTGRES_PASSWORD=hubot","POSTGRES_DB=hubot_control"]
+      env: [
+        "POSTGRES_USER=hubot",
+        "POSTGRES_PASSWORD=hubot",
+        "POSTGRES_DB=hubot_control"]
       detach: true
 
   hubot-db-migration:
@@ -19,7 +22,9 @@ containers:
     run:
       interactive: true
       rm: true
-      env: ["RAILS_DB_USERNAME=hubot","RAILS_DB_PASSWORD=hubot"]
+      env: [
+        "RAILS_DB_USERNAME=hubot",
+        "RAILS_DB_PASSWORD=hubot"]
       link: ["hubot-control-db:db"]
       cmd: bundle exec rake db:migrate RAILS_ENV=production
 
@@ -27,7 +32,9 @@ containers:
     image: hubot-control
     run:
       detach: true
-      env: ["RAILS_DB_USERNAME=hubot","RAILS_DB_PASSWORD=hubot"]
+      env: [
+        "RAILS_DB_USERNAME=hubot",
+        "RAILS_DB_PASSWORD=hubot"]
       link: ["hubot-control-db:db"]
       volumes-from: ["hubot-control-data"]
       publish: ["3000:3000"]
