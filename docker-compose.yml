@@ -1,0 +1,35 @@
+---
+hubotControlData:
+  image: hubot-control
+  volumes: 
+    - /usr/src/app/hubots
+  command: true
+
+hubotControlDB:
+  image: postgres:9.3
+  environment:
+    - POSTGRES_USER: hubot
+    - POSTGRES_PASSWORD: hubot
+    - POSTGRES_DB: hubot_control
+
+hubotDBmigration:
+  image: hubot-control
+  environment:
+    - RAILS_DB_USERNAME: hubot
+    - RAILS_DB_PASSWORD: hubot
+  links:
+    - hubotControlDB:db
+  command: bundle exec rake db:migrate RAILS_ENV=production
+
+hubotControlWeb:
+  image: hubot-control
+  environment:
+    - RAILS_DB_USERNAME: hubot
+    - RAILS_DB_PASSWORD: hubot
+  links:
+    - hubotControlDB:db
+  volumes_from:
+    - hubotControlData
+  ports:
+    - "3000:3000"
+
