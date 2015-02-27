@@ -16,6 +16,7 @@ RUN useradd -m hubot
 EXPOSE 3000
 
 WORKDIR /usr/src/app
+RUN mkdir hubots
 RUN chown -R hubot:hubot /usr/src/app
 
 USER hubot
