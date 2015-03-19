@@ -1,6 +1,6 @@
 ---
-hubotControlData:
-  image: hubot-control
+hubotcontroldata:
+  build: /home/rothgar/s/hubot-control
   volumes: 
     - /usr/src/app/hubots
   command: true
@@ -13,24 +13,24 @@ hubotControlDB:
     POSTGRES_DB: hubot_control
 
 hubotDBmigration:
-  image: hubot-control
+  image: hubotcontrol_hubotcontroldata
   environment:
     RAILS_DB_USERNAME: hubot_control
     RAILS_DB_PASSWORD: hubot_control
   links:
     - hubotControlDB:db
-  tty: false
+  restart: no
   command: bundle exec rake db:migrate RAILS_ENV=production
 
 hubotControlWeb:
-  image: hubot-control
+  image: hubotcontrol_hubotcontroldata
   environment:
     RAILS_DB_USERNAME: hubot_control
     RAILS_DB_PASSWORD: hubot_control
   links:
     - hubotControlDB:db
   volumes_from:
-    - hubotControlData
+    - hubotcontroldata
   ports:
     - "3000:3000"
 
