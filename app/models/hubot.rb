@@ -157,8 +157,8 @@ class Hubot < ActiveRecord::Base
 
     def install
       self.location = File.join(Hubot.base_dir, title.parameterize)
-      log Shell.run("hubot --create #{self.location}")
-      log Shell.run("cd #{self.location} && bin/hubot -v")
+      log Shell.run("mkdir -p #{self.location}")
+      log Shell.run("cd #{self.location} && yo hubot --adapter=#{adapter} --defaults && bin/hubot -v")
     end
 
     def uninstall
